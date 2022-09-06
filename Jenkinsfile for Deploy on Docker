@@ -34,7 +34,7 @@ pipeline {
     }
    stage('deploy to docker container') {
    steps{
-   sh "docker run --name nodejs1 -d -p 9000:3000 nodejs"
+   sh "docker run --name nodeapp1 -d -p 9000:3000 nodeapp1"
     }
    }
     }
