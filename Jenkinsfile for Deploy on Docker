@@ -1,7 +1,7 @@
 pipeline {
   environment {
     registry = "zyankill/nodeapp"
-    registryCredential = 'dockerhub_hub'
+    registryCredential = 'Docker_hub'
     dockerImage = ''
   }
   agent any
@@ -31,14 +31,14 @@ pipeline {
       steps{
         sh "docker rmi $registry:$BUILD_NUMBER"
       }
+    }
    stage('deploy to docker container') {
    steps{
-   sh "docker run --name nodejs -d -p 3000:3000 nodejs"
-}
-}
+   sh "docker run --name nodejs1 -d -p 9000:3000 nodejs"
+    }
+   }
     }
   }
-}
 
 
 
