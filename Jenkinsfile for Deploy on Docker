@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('get scm') {
       steps {
-	  git credentialsId: 'github_credentials', url: ''
+	  git credentialsId: 'github_credentials', url: 'https://github.com/paramesh416/company-task.git'
        }
     }
     stage('Building image') {
@@ -33,7 +33,7 @@ pipeline {
       }
    stage('deploy to docker container') {
    steps{
-   sh "docker run --name pnodejs -d -p 8088:8080 udaynodejs"
+   sh "docker run --name nodejs -d -p 3000:3000 nodejs"
 }
 }
     }
