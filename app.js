@@ -10,6 +10,6 @@ app.get('/version', (req, res) => {
   res.send(process.env.VERSION || 'No version')
 })
 
-app.listen(port, () => {
+app.listen(3000, () => {
   console.log(`Server ready`)
 })
