@@ -1,0 +1,48 @@
+pipeline {
+  environment {
+    registry = "zyankill/nodeapp"
+    registryCredential = 'dockerhub_hub'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('get scm') {
+      steps {
+	  git credentialsId: 'github_credentials', url: ''
+       }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    stage('push image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Remove old docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
+   stage('deploy to docker container') {
+   steps{
+   sh "docker run --name pnodejs -d -p 8088:8080 udaynodejs"
+}
+}
+    }
+  }
+}
+
+
+
+
+
+
+
