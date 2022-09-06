@@ -1,0 +1,46 @@
+pipeline {
+  environment {
+    registry = "zyankill/nodeapp"
+    registryCredential = 'Docker_hub'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('get scm') {
+      steps {
+	  git credentialsId: 'github_credentials', url: 'https://github.com/paramesh416/company-task.git'
+       }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    stage('push image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Remove old docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
+    }
+     stage('K8S Deploy') {
+        steps{   
+            script {
+                withKubeConfig([credentialsId: 'K8S', serverUrl: '']) {
+                sh ('kubectl apply -f  k8s.yaml')
+                }
+            }
+        }
+       }
+    
+    }
+  }
